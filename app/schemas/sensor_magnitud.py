@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 class SensorMagnitudRead(BaseModel):
-    """Una magnitud de sensor (con su unidad y rango) tal como la devuelven los GET."""
+    """Una magnitud de un sensor (con unidad y rango) como la devuelven los GET."""
 
     model_config = ConfigDict(from_attributes=True)
 

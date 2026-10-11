@@ -109,8 +109,8 @@ def evidencia_bd() -> None:
             {"c": CODIGO},
         ).one()
 
-        # Tramo continuo mas largo: payloads consecutivos sin huecos de mas de 60 s.
-        # (Primera-ultima no basta: si la API se apago a ratos, el rango engana.)
+        # tramo continuo mas largo: mediciones seguidas sin huecos de mas de 60 s.
+        # (con la primera y la ultima no alcanza: si la API se apago un rato, el resultado engana)
         continuo = db.execute(
             text(
                 """

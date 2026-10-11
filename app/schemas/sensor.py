@@ -4,7 +4,7 @@ from app.schemas.medicion import FechaColombia
 
 
 class SensorRead(BaseModel):
-    """Un sensor del catálogo tal como lo devuelven los endpoints GET."""
+    """Un sensor como lo devuelven los GET."""
 
     model_config = ConfigDict(from_attributes=True)
 

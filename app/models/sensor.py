@@ -7,7 +7,7 @@ from app.database.connection import Base
 
 
 class Sensor(Base):
-    """Tabla `sensores` (catálogo suministrado por el docente, solo lectura)."""
+    """Tabla sensores. Solo la leemos, la dejó el profe."""
 
     __tablename__ = "sensores"
 

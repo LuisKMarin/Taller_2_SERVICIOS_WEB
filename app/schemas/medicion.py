@@ -10,41 +10,39 @@ from pydantic import (
     field_validator,
 )
 
-# Colombia no usa horario de verano: su hora es siempre UTC-5.
+# Colombia siempre es UTC-5 (no tiene horario de verano)
 COLOMBIA = timezone(timedelta(hours=-5), "COT")
 
 
 def _a_hora_colombia(valor: datetime) -> str:
-    """UTC -> hora de Colombia, en formato legible: 2026-10-10 21:46:12-05:00."""
-    if valor.tzinfo is None:  # la BD guarda UTC; si llega sin zona, se asume UTC
+    """Pasa la fecha de UTC a hora de Colombia. Queda así: 2026-10-10 21:46:12-05:00"""
+    if valor.tzinfo is None:  # si no trae zona horaria asumimos que es UTC
         valor = valor.replace(tzinfo=timezone.utc)
     return valor.astimezone(COLOMBIA).isoformat(sep=" ", timespec="seconds")
 
 
-# Fecha que se muestra siempre en hora de Colombia en las respuestas GET.
+# tipo para que las fechas de los GET salgan en hora de Colombia
 FechaColombia = Annotated[datetime, PlainSerializer(_a_hora_colombia, return_type=str)]
 
 
-# ====================================================================
-#  Mensaje MQTT (entrada): solo valida la FORMA del payload
-# ====================================================================
-# value: número JSON (int o float). Rechaza textos ("24.6"), booleanos, NaN e infinito.
+# --- Lo que llega por MQTT (solo se revisa la forma del mensaje) ---
+# value tiene que ser un número de verdad. Si llega texto como "24.6", un booleano, NaN o infinito se rechaza
 Numero = Annotated[float, Field(strict=True, allow_inf_nan=False)]
 
 
 class MagnitudMQTT(BaseModel):
-    """Una magnitud dentro del payload: {"value": 24.6, "unit": "C"}."""
+    """Una magnitud del mensaje, por ejemplo {"value": 24.6, "unit": "C"}."""
 
     value: Numero
     unit: str = Field(strict=True, min_length=1)
 
 
 class PayloadMQTT(BaseModel):
-    """Estructura completa del mensaje que publica el sensor por MQTT.
+    """Estructura del mensaje que manda el sensor.
 
-    Pydantic valida SOLO la forma: campos obligatorios, tipos y formato del
-    timestamp. Que el sensor exista, la magnitud pertenezca a él y la unidad
-    coincida se valida después contra la base de datos (crud/ + mqtt/client.py).
+    Aquí Pydantic solo revisa que estén los campos, que los tipos sean los
+    correctos y que el timestamp tenga buen formato. Si el sensor existe, la
+    magnitud y la unidad se revisan después en la base de datos (crud/medicion.py).
     """
 
     sensor_id: str = Field(strict=True, min_length=1)
@@ -54,7 +52,7 @@ class PayloadMQTT(BaseModel):
     @field_validator("timestamp", mode="before")
     @classmethod
     def timestamp_debe_ser_texto_iso(cls, v):
-        # Sin esto Pydantic aceptaría números (epoch) como fecha.
+        # si no ponemos esto Pydantic acepta un número como fecha
         if not isinstance(v, str):
             raise ValueError("timestamp debe ser un texto ISO 8601, ej. 2026-10-07T16:25:30Z")
         return v
@@ -67,11 +65,9 @@ class PayloadMQTT(BaseModel):
         return v.astimezone(timezone.utc)
 
 
-# ====================================================================
-#  Respuesta de la API (salida)
-# ====================================================================
+# --- Lo que devuelve la API ---
 class MedicionRead(BaseModel):
-    """Una medición tal como la devuelven los endpoints GET."""
+    """Una medición como la devuelven los GET."""
 
     model_config = ConfigDict(from_attributes=True)
 

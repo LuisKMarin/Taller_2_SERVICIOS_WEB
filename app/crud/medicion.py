@@ -12,19 +12,19 @@ from app.schemas.medicion import PayloadMQTT
 
 
 class MedicionRechazada(Exception):
-    """El payload tiene buena estructura pero incumple una regla de negocio."""
+    """Se usa cuando el mensaje está bien armado pero no cumple alguna regla (sensor, unidad, rango...)."""
 
 
-# ---------------------------------------------------------------- escritura
+# ---------- escritura ----------
 def validar_payload(
     db: Session, payload: PayloadMQTT
 ) -> list[tuple[SensorMagnitud, Decimal]]:
-    """Valida un payload ya estructurado contra el catálogo de la base de datos.
+    """Revisa un mensaje contra lo que hay en la base de datos.
 
-    Comprueba: el sensor existe, está activo, cada magnitud pertenece a ese
-    sensor, la unidad coincide y el valor está dentro del rango permitido.
-    Si UNA sola magnitud falla se rechaza todo el payload (MedicionRechazada).
-    No escribe nada en la base de datos.
+    Mira que el sensor exista y esté activo, que cada magnitud sea de ese sensor,
+    que la unidad coincida y que el valor esté dentro del rango.
+    Si una sola magnitud falla se rechaza todo el mensaje.
+    Esta función no guarda nada.
     """
     sensor = crud_sensor.get_sensor_por_codigo(db, payload.sensor_id)
     if sensor is None:
@@ -59,9 +59,9 @@ def crear_mediciones(
     validadas: list[tuple[SensorMagnitud, Decimal]],
     timestamp_utc: datetime,
 ) -> list[Medicion]:
-    """Guarda una medición por magnitud, todas con el mismo `timestamp_utc`.
+    """Guarda una medición por cada magnitud, todas con el mismo timestamp_utc.
 
-    Se hace en una sola transacción: o se guardan todas o no se guarda ninguna.
+    Es una sola transacción: se guardan todas o no se guarda ninguna.
     """
     mediciones = [
         Medicion(sensor_magnitud_id=sm.id, valor=valor, timestamp_utc=timestamp_utc)
@@ -78,7 +78,7 @@ def crear_mediciones(
     return mediciones
 
 
-# ----------------------------------------------------------------- lectura
+# ---------- lectura ----------
 def _mediciones_de_sensor(sensor_id: int):
     return (
         select(Medicion)
@@ -89,7 +89,7 @@ def _mediciones_de_sensor(sensor_id: int):
 
 
 def get_medicion(db: Session, medicion_id: int) -> Medicion | None:
-    """Busca una medición por su clave primaria."""
+    """Busca una medición por su id."""
     return db.scalar(
         select(Medicion)
         .where(Medicion.id == medicion_id)
@@ -105,9 +105,9 @@ def get_mediciones_por_sensor(
     hasta: datetime | None = None,
     limit: int | None = None,
 ) -> list[Medicion]:
-    """Histórico de un sensor, de la más reciente a la más antigua.
+    """Historial de un sensor, de la más nueva a la más vieja.
 
-    Los filtros son opcionales y combinables. `limit` devuelve las últimas N.
+    Los filtros son opcionales y se pueden combinar. limit trae las últimas N.
     """
     stmt = _mediciones_de_sensor(sensor_id)
     if magnitud is not None:
@@ -123,9 +123,9 @@ def get_mediciones_por_sensor(
 
 
 def get_ultima_lectura(db: Session, sensor_id: int) -> list[Medicion]:
-    """Mediciones del instante más reciente de un sensor (una por magnitud).
+    """Trae las mediciones del momento más reciente de un sensor (una por magnitud).
 
-    Lista vacía si el sensor todavía no tiene mediciones.
+    Si el sensor no tiene mediciones devuelve una lista vacía.
     """
     ultimo = db.scalar(
         select(func.max(Medicion.timestamp_utc))

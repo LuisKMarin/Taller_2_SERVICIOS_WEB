@@ -8,7 +8,7 @@ from app.database.connection import Base
 
 
 class Medicion(Base):
-    """Tabla `mediciones` (aquí sí se insertan los datos válidos recibidos por MQTT)."""
+    """Tabla mediciones. Es la única donde guardamos datos (los que llegan válidos por MQTT)."""
 
     __tablename__ = "mediciones"
     __table_args__ = (

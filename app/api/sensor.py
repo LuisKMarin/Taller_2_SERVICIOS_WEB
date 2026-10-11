@@ -9,12 +9,12 @@ from app.schemas.sensor import SensorRead
 
 router = APIRouter(tags=["Sensores"])
 
-INT_MAX = 2_147_483_647  # límite del INTEGER de PostgreSQL
+INT_MAX = 2_147_483_647  # máximo valor del INTEGER en PostgreSQL
 SensorId = Annotated[int, Path(ge=1, le=INT_MAX, description="`id` numérico del sensor")]
 
 
 def obtener_sensor_o_404(db: Session, sensor_id: int):
-    """Devuelve el sensor o lanza 404. Lo reutilizan los otros routers."""
+    """Devuelve el sensor o lanza un 404. Lo usan también los otros routers."""
     sensor = crud_sensor.get_sensor(db, sensor_id)
     if sensor is None:
         raise HTTPException(status_code=404, detail=f"No existe un sensor con id {sensor_id}")

@@ -23,11 +23,11 @@ SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 
 class Base(DeclarativeBase):
-    """Clase base de la que heredan todos los modelos ORM."""
+    """Clase base de los modelos."""
 
 
 def get_db():
-    """Entrega una sesión por petición y la cierra al terminar."""
+    """Abre una sesión de la base de datos y la cierra cuando termina la petición."""
     db = SessionLocal()
     try:
         yield db

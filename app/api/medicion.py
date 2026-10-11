@@ -12,16 +12,15 @@ from app.schemas.medicion import COLOMBIA, MedicionRead
 
 router = APIRouter(tags=["Mediciones"])
 
-BIGINT_MAX = 9_223_372_036_854_775_807  # límite del BIGINT de PostgreSQL
+BIGINT_MAX = 9_223_372_036_854_775_807  # máximo valor del BIGINT en PostgreSQL
 MedicionId = Annotated[int, Path(ge=1, le=BIGINT_MAX, description="`id` de la medición")]
 
 
 def _a_utc(valor: datetime | None) -> datetime | None:
-    """Convierte un filtro de fecha a UTC.
+    """Pasa un filtro de fecha a UTC.
 
-    Si llega sin zona horaria (ej. 2026-10-10T21:40:00) se interpreta como
-    hora de Colombia, que es la que muestran las respuestas.
-    Si trae zona (ej. ...Z o ...-05:00) se respeta.
+    Si llega sin zona horaria se toma como hora de Colombia, que es la que mostramos.
+    Si trae zona (Z o -05:00) se respeta.
     """
     if valor is None:
         return None

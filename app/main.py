@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.api import medicion, sensor, sensor_magnitud
 from app.mqtt.client import start_mqtt, stop_mqtt
 
-# Log en consola y en el archivo mqtt.log (el .gitignore ignora *.log).
+# configuro el log para que salga en consola y se guarde en mqtt.log
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)-7s %(message)s",
@@ -22,7 +22,7 @@ logger = logging.getLogger("app.api")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Arranca el suscriptor MQTT junto con la API y lo detiene al cerrar."""
+    """Inicia MQTT cuando prende la API y lo apaga cuando se cierra."""
     cliente = start_mqtt()
     yield
     stop_mqtt(cliente)

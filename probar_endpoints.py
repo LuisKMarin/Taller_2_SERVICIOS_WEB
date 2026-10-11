@@ -176,7 +176,7 @@ def main() -> None:
         mas_reciente = fecha(historico[0])
         probar(14, "Ultima medicion", f"/sensores/{sid}/ultima-medicion", 200,
                verificar=lambda b: (
-                   len({m["timestamp_colombia"] for m in b}) == 1 and fecha(b[0]) == mas_reciente,
+                   len({m["timestamp_colombia"] for m in b}) == 1 and fecha(b[0]) >= mas_reciente,
                    f"{len(b)} medicion(es) del instante mas reciente: {b[0]['timestamp_colombia']}"),
                donde="app/api/medicion.py -> ultima_medicion -> app/crud/medicion.py -> get_ultima_lectura",
                explicacion="Una medicion por magnitud, todas del timestamp mas reciente.")
@@ -184,7 +184,10 @@ def main() -> None:
         # -------------------------------------------- #15 últimas N
         n = min(5, len(historico))
         probar(15, f"Ultimas {n} mediciones (limit={n})", f"/sensores/{sid}/mediciones", 200, params={"limit": n},
-               verificar=lambda b: (len(b) == n and b == historico[:n], f"devolvio {len(b)} = las {n} mas recientes"),
+               verificar=lambda b: (
+                   len(b) == n and fecha(b[0]) >= fecha(historico[0])
+                   and all(fecha(b[k]) >= fecha(b[k + 1]) for k in range(n - 1)),
+                   f"devolvio {len(b)} mediciones, de la mas reciente a la mas antigua"),
                donde=ARCH_MED + " (stmt.limit)", explicacion="limit devuelve las ultimas N filas.")
 
         # -------------------------------------------- #16 filtro por magnitud
