@@ -1,21 +1,32 @@
 EVIDENCIA #1 - Recepcion MQTT desde el topico asignado
-Generado: 2026-10-10 22:31:30
+Generado: 2026-10-10 23:19:46
 Archivo y funcion: app/mqtt/client.py -> _on_connect, _on_message, procesar_mensaje
 
-Total de mensajes recibidos en el log : 22
-Total guardados                       : 22
-Total rechazados                      : 0
+Total de mensajes recibidos en el log : 245
+Total guardados                       : 236
+Total rechazados                      : 9
 
 --- Primeras lineas relevantes del log ---
-2026-10-10 21:59:06,041 INFO    Conectado al broker emqx.coriotlab.co:1883
-2026-10-10 21:59:06,042 INFO    Suscrito al tópico: iot/sensors/GAS-005/data
-2026-10-10 21:59:09,153 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:07Z", "measurements": {"nh3": {"value": 2.9, "unit": "ppm"}, "temperature": {"value": 30.87, "unit": "C"}, "humidity": {"value": 46.17, "unit": "%"}}}
-2026-10-10 21:59:10,359 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:07+00:00 mediciones=3 (nh3=2.9000, temperature=30.8700, humidity=46.1700)
-2026-10-10 21:59:14,154 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:12Z", "measurements": {"nh3": {"value": 12.99, "unit": "ppm"}, "temperature": {"value": 18.21, "unit": "C"}, "humidity": {"value": 48.8, "unit": "%"}}}
-2026-10-10 21:59:14,817 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:12+00:00 mediciones=3 (nh3=12.9900, temperature=18.2100, humidity=48.8000)
-2026-10-10 21:59:19,162 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:17Z", "measurements": {"nh3": {"value": 10.85, "unit": "ppm"}, "temperature": {"value": 28.57, "unit": "C"}, "humidity": {"value": 45.87, "unit": "%"}}}
-2026-10-10 21:59:19,816 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:17+00:00 mediciones=3 (nh3=10.8500, temperature=28.5700, humidity=45.8700)
-2026-10-10 21:59:24,151 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:22Z", "measurements": {"nh3": {"value": 18.4, "unit": "ppm"}, "temperature": {"value": 27.82, "unit": "C"}, "humidity": {"value": 67.02, "unit": "%"}}}
-2026-10-10 21:59:24,799 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:22+00:00 mediciones=3 (nh3=18.4000, temperature=27.8200, humidity=67.0200)
-2026-10-10 21:59:29,152 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:27Z", "measurements": {"nh3": {"value": 1.74, "unit": "ppm"}, "temperature": {"value": 31.66, "unit": "C"}, "humidity": {"value": 74.17, "unit": "%"}}}
-2026-10-10 21:59:29,805 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:27+00:00 mediciones=3 (nh3=1.7400, temperature=31.6600, humidity=74.1700)
+2026-10-10 22:59:22,858 INFO    Conectado al broker emqx.coriotlab.co:1883
+2026-10-10 22:59:22,859 INFO    Suscrito al tópico: iot/sensors/GAS-005/data
+2026-10-10 22:59:24,465 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:59:23Z", "measurements": {"nh3": {"value": 1.88, "unit": "ppm"}, "temperature": {"value": 27.99, "unit": "C"}, "humidity": {"value": 48.78, "unit": "%"}}}
+2026-10-10 22:59:25,773 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T03:59:23+00:00 mediciones=3 (nh3=1.8800, temperature=27.9900, humidity=48.7800)
+2026-10-10 22:59:29,467 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:59:28Z", "measurements": {"nh3": {"value": 13.44, "unit": "ppm"}, "temperature": {"value": 24.71, "unit": "C"}, "humidity": {"value": 81.51, "unit": "%"}}}
+2026-10-10 22:59:29,974 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T03:59:28+00:00 mediciones=3 (nh3=13.4400, temperature=24.7100, humidity=81.5100)
+2026-10-10 22:59:34,461 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:59:33Z", "measurements": {"nh3": {"value": 2.45, "unit": "ppm"}, "temperature": {"value": 28.0, "unit": "C"}, "humidity": {"value": 65.39, "unit": "%"}}}
+2026-10-10 22:59:34,973 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T03:59:33+00:00 mediciones=3 (nh3=2.4500, temperature=28.0000, humidity=65.3900)
+2026-10-10 22:59:39,473 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:59:38Z", "measurements": {"nh3": {"value": 13.56, "unit": "ppm"}, "temperature": {"value": 25.98, "unit": "C"}, "humidity": {"value": 37.49, "unit": "%"}}}
+2026-10-10 22:59:39,980 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T03:59:38+00:00 mediciones=3 (nh3=13.5600, temperature=25.9800, humidity=37.4900)
+2026-10-10 22:59:44,480 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:59:43Z", "measurements": {"nh3": {"value": 6.96, "unit": "ppm"}, "temperature": {"value": 29.04, "unit": "C"}, "humidity": {"value": 37.98, "unit": "%"}}}
+2026-10-10 22:59:45,001 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T03:59:43+00:00 mediciones=3 (nh3=6.9600, temperature=29.0400, humidity=37.9800)
+
+--- Rechazos reales recibidos del broker ---
+2026-10-10 23:00:29,693 WARNING [RECHAZADO][REGLA_NEGOCIO] Valor fuera de rango para 'humidity': 999999.0 (permitido 0.0000 a 100.0000)
+2026-10-10 23:01:24,739 WARNING [RECHAZADO][REGLA_NEGOCIO] La magnitud 'co2' no pertenece al sensor 'GAS-005'
+2026-10-10 23:01:34,664 WARNING [RECHAZADO][REGLA_NEGOCIO] Valor fuera de rango para 'temperature': 999999.0 (permitido 10.0000 a 50.0000)
+2026-10-10 23:06:24,512 WARNING [RECHAZADO][ESTRUCTURA] timestamp: Input should be a valid datetime or date, invalid character in year
+2026-10-10 23:06:34,513 WARNING [RECHAZADO][ESTRUCTURA] measurements.nh3.value: Input should be a valid number
+2026-10-10 23:14:19,813 WARNING [RECHAZADO][REGLA_NEGOCIO] La magnitud 'co2' no pertenece al sensor 'GAS-005'
+2026-10-10 23:15:54,816 WARNING [RECHAZADO][REGLA_NEGOCIO] Valor fuera de rango para 'humidity': 999999.0 (permitido 0.0000 a 100.0000)
+2026-10-10 23:16:29,823 WARNING [RECHAZADO][REGLA_NEGOCIO] La magnitud 'co2' no pertenece al sensor 'GAS-005'
+2026-10-10 23:17:19,573 WARNING [RECHAZADO][ESTRUCTURA] measurements.nh3.value: Input should be a valid number

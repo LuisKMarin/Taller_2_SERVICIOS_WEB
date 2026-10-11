@@ -1,7 +1,9 @@
 EVIDENCIAS #8 a #16 - Endpoints FastAPI
-Generado: 2026-10-10 22:32:14   API: http://127.0.0.1:8000   Sensor: GAS-005 (id=8)
+Generado: 2026-10-10 23:20:15   API: http://127.0.0.1:8000   Sensor: GAS-005 (id=8)
 Codigos HTTP observados: 200, 400, 404, 422
-Pruebas: 22   Correctas: 22   Con fallo: 0
+Pruebas: 22   Correctas: 20   Con fallo: 2
+  FALLO: #14 Ultima medicion
+  FALLO: #15 Ultimas 5 mediciones (limit=5)
 
 --- Prueba #8: Listar sensores ---
 Solicitud          : GET http://127.0.0.1:8000/sensores
@@ -120,52 +122,52 @@ Explicacion        : Una fila de sensor_magnitudes por su clave primaria.
 --- Prueba #10: Consulta historica (sin filtros) ---
 Solicitud          : GET http://127.0.0.1:8000/sensores/8/mediciones
 Codigo HTTP        : 200 (esperado 200) -> OK
-Verificacion       : 78 mediciones, de la mas reciente a la mas antigua
-Respuesta          : 78 elemento(s). Primeros 3:
+Verificacion       : 837 mediciones, de la mas reciente a la mas antigua
+Respuesta          : 837 elemento(s). Primeros 3:
 [
   {
-    "id": 135727,
+    "id": 138579,
     "sensor_magnitud_id": 22,
     "magnitud": "humidity",
     "unidad": "%",
-    "valor": 31.02,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 66.07,
+    "timestamp_colombia": "2026-10-10 23:20:08-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:08-05:00"
   },
   {
-    "id": 135726,
+    "id": 138578,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 28.84,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 28.39,
+    "timestamp_colombia": "2026-10-10 23:20:08-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:08-05:00"
   },
   {
-    "id": 135725,
+    "id": 138577,
     "sensor_magnitud_id": 24,
     "magnitud": "nh3",
     "unidad": "ppm",
-    "valor": 7.19,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 15.39,
+    "timestamp_colombia": "2026-10-10 23:20:08-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:08-05:00"
   }
 ]
 Archivo y funcion  : app/api/medicion.py -> mediciones_de_sensor -> app/crud/medicion.py -> get_mediciones_por_sensor
 Explicacion        : Todas las mediciones del sensor ordenadas por timestamp_utc descendente.
 
 --- Prueba #8: Medicion por id existente ---
-Solicitud          : GET http://127.0.0.1:8000/mediciones/135727
+Solicitud          : GET http://127.0.0.1:8000/mediciones/138579
 Codigo HTTP        : 200 (esperado 200) -> OK
-Verificacion       : id devuelto = 135727
+Verificacion       : id devuelto = 138579
 Respuesta          : {
-  "id": 135727,
+  "id": 138579,
   "sensor_magnitud_id": 22,
   "magnitud": "humidity",
   "unidad": "%",
-  "valor": 31.02,
-  "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-  "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+  "valor": 66.07,
+  "timestamp_colombia": "2026-10-10 23:20:08-05:00",
+  "fecha_recepcion_colombia": "2026-10-10 23:20:08-05:00"
 }
 Archivo y funcion  : app/api/medicion.py -> medicion_por_id -> app/crud/medicion.py -> get_medicion
 Explicacion        : Muestra magnitud y unidad (join con sensor_magnitudes) y la hora en Colombia.
@@ -207,44 +209,44 @@ Archivo y funcion  : app/api/sensor_magnitud.py -> sensor_magnitud_por_id
 Explicacion        : No existe: 404.
 
 --- Prueba #11: Consulta por rango de fechas ---
-Solicitud          : GET http://127.0.0.1:8000/sensores/8/mediciones?desde=2026-10-10T21%3A59%3A47-05%3A00&hasta=2026-10-10T22%3A05%3A32-05%3A00
+Solicitud          : GET http://127.0.0.1:8000/sensores/8/mediciones?desde=2026-10-10T23%3A04%3A03-05%3A00&hasta=2026-10-10T23%3A11%3A58-05%3A00
 Codigo HTTP        : 200 (esperado 200) -> OK
-Verificacion       : 30 mediciones, todas entre desde y hasta
-Respuesta          : 30 elemento(s). Primeros 3:
+Verificacion       : 282 mediciones, todas entre desde y hasta
+Respuesta          : 282 elemento(s). Primeros 3:
 [
   {
-    "id": 134534,
+    "id": 138006,
     "sensor_magnitud_id": 22,
     "magnitud": "humidity",
     "unidad": "%",
-    "valor": 41.23,
-    "timestamp_colombia": "2026-10-10 22:05:32-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:05:33-05:00"
+    "valor": 76.47,
+    "timestamp_colombia": "2026-10-10 23:11:58-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:11:58-05:00"
   },
   {
-    "id": 134533,
+    "id": 138005,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 19.48,
-    "timestamp_colombia": "2026-10-10 22:05:32-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:05:33-05:00"
+    "valor": 20.59,
+    "timestamp_colombia": "2026-10-10 23:11:58-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:11:58-05:00"
   },
   {
-    "id": 134532,
+    "id": 138004,
     "sensor_magnitud_id": 24,
     "magnitud": "nh3",
     "unidad": "ppm",
-    "valor": 15.77,
-    "timestamp_colombia": "2026-10-10 22:05:32-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:05:33-05:00"
+    "valor": 3.36,
+    "timestamp_colombia": "2026-10-10 23:11:58-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:11:58-05:00"
   }
 ]
 Archivo y funcion  : app/api/medicion.py -> mediciones_de_sensor -> app/crud/medicion.py -> get_mediciones_por_sensor (+ _a_utc)
 Explicacion        : Filtra por timestamp_utc; fechas sin zona se interpretan como hora de Colombia.
 
 --- Prueba #12: Rango invalido: desde > hasta ---
-Solicitud          : GET http://127.0.0.1:8000/sensores/8/mediciones?desde=2026-10-10T22%3A05%3A32-05%3A00&hasta=2026-10-10T21%3A59%3A47-05%3A00
+Solicitud          : GET http://127.0.0.1:8000/sensores/8/mediciones?desde=2026-10-10T23%3A11%3A58-05%3A00&hasta=2026-10-10T23%3A04%3A03-05%3A00
 Codigo HTTP        : 400 (esperado 400) -> OK
 Respuesta          : {
   "detail": "Rango de fechas inválido: 'desde' no puede ser mayor que 'hasta'"
@@ -339,36 +341,36 @@ Explicacion        : Pydantic no puede interpretar el texto como fecha.
 
 --- Prueba #14: Ultima medicion ---
 Solicitud          : GET http://127.0.0.1:8000/sensores/8/ultima-medicion
-Codigo HTTP        : 200 (esperado 200) -> OK
-Verificacion       : 3 medicion(es) del instante mas reciente: 2026-10-10 22:32:08-05:00
+Codigo HTTP        : 200 (esperado 200) -> FALLO
+Verificacion       : 3 medicion(es) del instante mas reciente: 2026-10-10 23:20:13-05:00
 Respuesta          : 3 elemento(s). Primeros 3:
 [
   {
-    "id": 135725,
+    "id": 138583,
     "sensor_magnitud_id": 24,
     "magnitud": "nh3",
     "unidad": "ppm",
-    "valor": 7.19,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 16.5,
+    "timestamp_colombia": "2026-10-10 23:20:13-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:13-05:00"
   },
   {
-    "id": 135726,
+    "id": 138584,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 28.84,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 26.07,
+    "timestamp_colombia": "2026-10-10 23:20:13-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:13-05:00"
   },
   {
-    "id": 135727,
+    "id": 138585,
     "sensor_magnitud_id": 22,
     "magnitud": "humidity",
     "unidad": "%",
-    "valor": 31.02,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 61.74,
+    "timestamp_colombia": "2026-10-10 23:20:13-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:13-05:00"
   }
 ]
 Archivo y funcion  : app/api/medicion.py -> ultima_medicion -> app/crud/medicion.py -> get_ultima_lectura
@@ -376,36 +378,36 @@ Explicacion        : Una medicion por magnitud, todas del timestamp mas reciente
 
 --- Prueba #15: Ultimas 5 mediciones (limit=5) ---
 Solicitud          : GET http://127.0.0.1:8000/sensores/8/mediciones?limit=5
-Codigo HTTP        : 200 (esperado 200) -> OK
+Codigo HTTP        : 200 (esperado 200) -> FALLO
 Verificacion       : devolvio 5 = las 5 mas recientes
 Respuesta          : 5 elemento(s). Primeros 3:
 [
   {
-    "id": 135727,
+    "id": 138585,
     "sensor_magnitud_id": 22,
     "magnitud": "humidity",
     "unidad": "%",
-    "valor": 31.02,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 61.74,
+    "timestamp_colombia": "2026-10-10 23:20:13-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:13-05:00"
   },
   {
-    "id": 135726,
+    "id": 138584,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 28.84,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 26.07,
+    "timestamp_colombia": "2026-10-10 23:20:13-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:13-05:00"
   },
   {
-    "id": 135725,
+    "id": 138583,
     "sensor_magnitud_id": 24,
     "magnitud": "nh3",
     "unidad": "ppm",
-    "valor": 7.19,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 16.5,
+    "timestamp_colombia": "2026-10-10 23:20:13-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:13-05:00"
   }
 ]
 Archivo y funcion  : app/api/medicion.py -> mediciones_de_sensor -> app/crud/medicion.py -> get_mediciones_por_sensor (stmt.limit)
@@ -414,72 +416,72 @@ Explicacion        : limit devuelve las ultimas N filas.
 --- Prueba #16: Filtro por magnitud (temperature) ---
 Solicitud          : GET http://127.0.0.1:8000/sensores/8/mediciones?magnitud=temperature
 Codigo HTTP        : 200 (esperado 200) -> OK
-Verificacion       : 26 mediciones, todas de temperature
-Respuesta          : 26 elemento(s). Primeros 3:
+Verificacion       : 280 mediciones, todas de temperature
+Respuesta          : 280 elemento(s). Primeros 3:
 [
   {
-    "id": 135726,
+    "id": 138584,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 28.84,
-    "timestamp_colombia": "2026-10-10 22:32:08-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:08-05:00"
+    "valor": 26.07,
+    "timestamp_colombia": "2026-10-10 23:20:13-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:13-05:00"
   },
   {
-    "id": 135718,
+    "id": 138578,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 30.27,
-    "timestamp_colombia": "2026-10-10 22:32:03-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:32:03-05:00"
+    "valor": 28.39,
+    "timestamp_colombia": "2026-10-10 23:20:08-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:08-05:00"
   },
   {
-    "id": 135710,
+    "id": 138572,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 29.35,
-    "timestamp_colombia": "2026-10-10 22:31:58-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:31:58-05:00"
+    "valor": 19.65,
+    "timestamp_colombia": "2026-10-10 23:20:03-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:20:03-05:00"
   }
 ]
 Archivo y funcion  : app/api/medicion.py -> mediciones_de_sensor -> app/crud/medicion.py -> get_mediciones_por_sensor (SensorMagnitud.magnitud == magnitud)
 Explicacion        : Join con sensor_magnitudes y filtro por nombre de magnitud.
 
 --- Prueba #16: Filtros combinados (temperature + fechas + limit=3) ---
-Solicitud          : GET http://127.0.0.1:8000/sensores/8/mediciones?magnitud=temperature&desde=2026-10-10T21%3A59%3A47-05%3A00&hasta=2026-10-10T22%3A05%3A32-05%3A00&limit=3
+Solicitud          : GET http://127.0.0.1:8000/sensores/8/mediciones?magnitud=temperature&desde=2026-10-10T23%3A04%3A03-05%3A00&hasta=2026-10-10T23%3A11%3A58-05%3A00&limit=3
 Codigo HTTP        : 200 (esperado 200) -> OK
 Verificacion       : 3 mediciones de temperature dentro del rango
 Respuesta          : 3 elemento(s). Primeros 3:
 [
   {
-    "id": 134533,
+    "id": 138005,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 19.48,
-    "timestamp_colombia": "2026-10-10 22:05:32-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:05:33-05:00"
+    "valor": 20.59,
+    "timestamp_colombia": "2026-10-10 23:11:58-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:11:58-05:00"
   },
   {
-    "id": 134527,
+    "id": 137999,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 24.01,
-    "timestamp_colombia": "2026-10-10 22:05:28-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:05:28-05:00"
+    "valor": 20.37,
+    "timestamp_colombia": "2026-10-10 23:11:53-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:11:53-05:00"
   },
   {
-    "id": 134521,
+    "id": 137993,
     "sensor_magnitud_id": 23,
     "magnitud": "temperature",
     "unidad": "C",
-    "valor": 22.09,
-    "timestamp_colombia": "2026-10-10 22:05:22-05:00",
-    "fecha_recepcion_colombia": "2026-10-10 22:05:23-05:00"
+    "valor": 26.18,
+    "timestamp_colombia": "2026-10-10 23:11:48-05:00",
+    "fecha_recepcion_colombia": "2026-10-10 23:11:48-05:00"
   }
 ]
 Archivo y funcion  : app/api/medicion.py -> mediciones_de_sensor -> app/crud/medicion.py -> get_mediciones_por_sensor
