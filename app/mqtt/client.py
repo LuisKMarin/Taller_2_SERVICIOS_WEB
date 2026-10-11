@@ -72,14 +72,14 @@ def procesar_mensaje(topic: str, crudo: bytes, session_factory=SessionLocal) -> 
     # 3 y 4. Reglas de negocio (ORM) y guardado
     try:
         with session_factory() as db:
-            validadas = crud_medicion.validar_payload(db, payload)
-
+            # Solo se acepta el sensor asignado al grupo (antes de tocar la BD).
             if SENSOR_CODIGO and payload.sensor_id != SENSOR_CODIGO:
                 raise crud_medicion.MedicionRechazada(
                     f"El sensor '{payload.sensor_id}' no es el asignado "
                     f"('{SENSOR_CODIGO}')"
                 )
 
+            validadas = crud_medicion.validar_payload(db, payload)
             mediciones = crud_medicion.crear_mediciones(db, validadas, payload.timestamp)
             resumen = ", ".join(
                 f"{m.sensor_magnitud.magnitud}={m.valor}" for m in mediciones

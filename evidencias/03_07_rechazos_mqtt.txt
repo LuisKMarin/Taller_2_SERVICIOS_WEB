@@ -1,0 +1,124 @@
+EVIDENCIAS #3 a #7 - Mensajes MQTT invalidos rechazados (y no almacenados)
+Generado: 2026-10-10 22:31:24   Sensor: GAS-005   Topico: iot/sensors/GAS-005/data
+Cada caso se procesa con app.mqtt.client.procesar_mensaje (la misma ruta del suscriptor real).
+
+--- Caso 1 (prueba #3): Sensor inexistente ---
+Entrada            : {"sensor_id": "GAS-999", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-999", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+    WARNING [RECHAZADO][REGLA_NEGOCIO] Sensor inexistente: 'GAS-999'
+Archivo y funcion  : app/crud/medicion.py -> validar_payload (get_sensor_por_codigo devuelve None)
+Explicacion        : El codigo GAS-999 no existe en la tabla sensores.
+
+--- Caso 2 (prueba #4): Unidad incorrecta (nh3 en ppb, el catalogo dice ppm) ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": 5.0, "unit": "ppb"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": 5.0, "unit": "ppb"}}}
+    WARNING [RECHAZADO][REGLA_NEGOCIO] Unidad incorrecta para 'nh3': llegó 'ppb', se esperaba 'ppm'
+Archivo y funcion  : app/crud/medicion.py -> validar_payload (medida.unit != sm.unidad)
+Explicacion        : La unidad recibida no coincide con la unidad registrada para esa magnitud.
+
+--- Caso 3 (prueba #5): Tipo de dato incorrecto: value como texto ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": "5.0", "unit": "ppm"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": "5.0", "unit": "ppm"}}}
+    WARNING [RECHAZADO][ESTRUCTURA] measurements.nh3.value: Input should be a valid number
+Archivo y funcion  : app/schemas/medicion.py -> MagnitudMQTT.value (Numero con strict=True)
+Explicacion        : Pydantic rechaza '5.0' (texto): value debe ser un numero JSON.
+
+--- Caso 4 (prueba #5): Tipo de dato incorrecto: value booleano ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": true, "unit": "ppm"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": true, "unit": "ppm"}}}
+    WARNING [RECHAZADO][ESTRUCTURA] measurements.nh3.value: Input should be a valid number
+Archivo y funcion  : app/schemas/medicion.py -> MagnitudMQTT.value (Numero con strict=True)
+Explicacion        : Pydantic rechaza true: en modo estricto un booleano no es un numero.
+
+--- Caso 5 (prueba #6): Magnitud incorrecta (pressure no pertenece al sensor) ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"pressure": {"value": 5.0, "unit": "ppm"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"pressure": {"value": 5.0, "unit": "ppm"}}}
+    WARNING [RECHAZADO][REGLA_NEGOCIO] La magnitud 'pressure' no pertenece al sensor 'GAS-005'
+Archivo y funcion  : app/crud/medicion.py -> validar_payload (get_magnitud_de_sensor devuelve None)
+Explicacion        : La magnitud no esta asociada al sensor en sensor_magnitudes.
+
+--- Caso 6 (prueba #7): Timestamp invalido: texto sin formato ISO ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": "ayer en la tarde", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "ayer en la tarde", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+    WARNING [RECHAZADO][ESTRUCTURA] timestamp: Input should be a valid datetime or date, invalid character in year
+Archivo y funcion  : app/schemas/medicion.py -> PayloadMQTT.timestamp
+Explicacion        : No es una fecha ISO 8601 valida.
+
+--- Caso 7 (prueba #7): Timestamp invalido: fecha imposible ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": "2026-13-45T99:99:99Z", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-13-45T99:99:99Z", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+    WARNING [RECHAZADO][ESTRUCTURA] timestamp: Input should be a valid datetime or date, month value is outside expected range of 1-12
+Archivo y funcion  : app/schemas/medicion.py -> PayloadMQTT.timestamp
+Explicacion        : Mes 13, dia 45 y hora 99 no existen.
+
+--- Caso 8 (prueba #7): Timestamp invalido: sin zona horaria ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": "2026-10-10T16:25:30", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-10T16:25:30", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+    WARNING [RECHAZADO][ESTRUCTURA] timestamp: Value error, timestamp debe incluir zona horaria (UTC, ej. terminar en 'Z')
+Archivo y funcion  : app/schemas/medicion.py -> PayloadMQTT.timestamp_con_zona_y_en_utc
+Explicacion        : El timestamp debe indicar zona horaria (UTC, termina en Z).
+
+--- Caso 9 (prueba #7): Timestamp invalido: numerico (epoch) ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": 1791390330, "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": 1791390330, "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "C"}, "humidity": {"value": 60.0, "unit": "%"}}}
+    WARNING [RECHAZADO][ESTRUCTURA] timestamp: Value error, timestamp debe ser un texto ISO 8601, ej. 2026-10-07T16:25:30Z
+Archivo y funcion  : app/schemas/medicion.py -> PayloadMQTT.timestamp_debe_ser_texto_iso
+Explicacion        : Un numero no se acepta como fecha; debe ser texto ISO 8601.
+
+--- Caso 10 (prueba #extra): Valor fuera del rango permitido ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": 1100.0, "unit": "ppm"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": 1100.0, "unit": "ppm"}}}
+    WARNING [RECHAZADO][REGLA_NEGOCIO] Valor fuera de rango para 'nh3': 1100.0 (permitido 0.0000 a 100.0000)
+Archivo y funcion  : app/crud/medicion.py -> validar_payload (valor_minimo <= valor <= valor_maximo)
+Explicacion        : El valor supera valor_maximo del catalogo.
+
+--- Caso 11 (prueba #extra): Todo o nada: nh3 valido + temperature con unidad F ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "F"}}}
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T03:31:24Z", "measurements": {"nh3": {"value": 5.0, "unit": "ppm"}, "temperature": {"value": 25.0, "unit": "F"}}}
+    WARNING [RECHAZADO][REGLA_NEGOCIO] Unidad incorrecta para 'temperature': llegó 'F', se esperaba 'C'
+Archivo y funcion  : app/crud/medicion.py -> validar_payload
+Explicacion        : Una sola magnitud invalida rechaza todo el payload; ni siquiera nh3 (valida) se guarda.
+
+--- Caso 12 (prueba #extra): JSON mal formado ---
+Entrada            : {"sensor_id": "GAS-005", "timestamp": 
+Resultado          : RECHAZADO
+Mediciones en BD   : antes=135654 despues=135654 -> NO se almaceno nada (correcto)
+Registro en el log :
+    WARNING [RECHAZADO][JSON] tópico=iot/sensors/GAS-005/data motivo=Expecting value: line 1 column 39 (char 38) payload=b'{"sensor_id": "GAS-005", "timestamp": '
+Archivo y funcion  : app/mqtt/client.py -> procesar_mensaje (json.loads)
+Explicacion        : El mensaje ni siquiera es JSON valido.
+
+RESUMEN: todos los casos fueron rechazados y la tabla mediciones no cambio.

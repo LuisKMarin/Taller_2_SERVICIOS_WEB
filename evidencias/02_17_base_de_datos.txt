@@ -1,0 +1,42 @@
+EVIDENCIAS #2 y #17 - Datos almacenados y claves foraneas en PostgreSQL
+Generado: 2026-10-10 22:31:30   Sensor: GAS-005
+Archivos: app/crud/medicion.py -> crear_mediciones | app/models/sensor_magnitud.py y app/models/medicion.py -> ForeignKey
+
+== Mediciones por magnitud (catalogo + lo almacenado) ==
+sm.id  magnitud     unidad  min      max       total  primera_utc                ultima_utc               
+-----  -----------  ------  -------  --------  -----  -------------------------  -------------------------
+22     humidity     %       0.0000   100.0000  22     2026-10-11 02:59:07+00:00  2026-10-11 03:05:52+00:00
+23     temperature  C       10.0000  50.0000   22     2026-10-11 02:59:07+00:00  2026-10-11 03:05:52+00:00
+24     nh3          ppm     0.0000   100.0000  22     2026-10-11 02:59:07+00:00  2026-10-11 03:05:52+00:00
+
+== Tiempo de muestreo (requisito: al menos 20 minutos) ==
+Payloads guardados (timestamps distintos): 22
+Filas por payload: minimo 3, maximo 3 (una por magnitud, mismo timestamp_utc)
+Primera medicion : 2026-10-11 02:59:07+00:00
+Ultima medicion  : 2026-10-11 03:05:52+00:00
+Duracion         : 6.8 minutos -> NO CUMPLE: deja la API corriendo mas tiempo
+
+== Ultimas 12 mediciones almacenadas (evidencia #2) ==
+id      sensor   magnitud     valor    unidad  timestamp_utc              fecha_recepcion                   sm_id
+------  -------  -----------  -------  ------  -------------------------  --------------------------------  -----
+134558  GAS-005  humidity     75.4900  %       2026-10-11 03:05:52+00:00  2026-10-11 03:05:53.074018+00:00  22   
+134557  GAS-005  temperature  28.9500  C       2026-10-11 03:05:52+00:00  2026-10-11 03:05:53.074018+00:00  23   
+134556  GAS-005  nh3          8.7800   ppm     2026-10-11 03:05:52+00:00  2026-10-11 03:05:53.074018+00:00  24   
+134552  GAS-005  humidity     78.5100  %       2026-10-11 03:05:47+00:00  2026-10-11 03:05:48.074948+00:00  22   
+134551  GAS-005  temperature  25.8000  C       2026-10-11 03:05:47+00:00  2026-10-11 03:05:48.074948+00:00  23   
+134550  GAS-005  nh3          15.6600  ppm     2026-10-11 03:05:47+00:00  2026-10-11 03:05:48.074948+00:00  24   
+134546  GAS-005  humidity     58.7300  %       2026-10-11 03:05:42+00:00  2026-10-11 03:05:43.077915+00:00  22   
+134545  GAS-005  temperature  29.6100  C       2026-10-11 03:05:42+00:00  2026-10-11 03:05:43.077915+00:00  23   
+134544  GAS-005  nh3          8.8800   ppm     2026-10-11 03:05:42+00:00  2026-10-11 03:05:43.077915+00:00  24   
+134540  GAS-005  humidity     75.7500  %       2026-10-11 03:05:38+00:00  2026-10-11 03:05:38.084418+00:00  22   
+134539  GAS-005  temperature  24.3800  C       2026-10-11 03:05:38+00:00  2026-10-11 03:05:38.084418+00:00  23   
+134538  GAS-005  nh3          2.9500   ppm     2026-10-11 03:05:38+00:00  2026-10-11 03:05:38.084418+00:00  24   
+
+== Claves foraneas definidas en PostgreSQL (evidencia #17) ==
+tabla              restriccion           definicion                                                                                            
+-----------------  --------------------  ------------------------------------------------------------------------------------------------------
+mediciones         fk_medicion_magnitud  FOREIGN KEY (sensor_magnitud_id) REFERENCES sensor_magnitudes(id) ON UPDATE CASCADE ON DELETE RESTRICT
+sensor_magnitudes  fk_magnitud_sensor    FOREIGN KEY (sensor_id) REFERENCES sensores(id) ON UPDATE CASCADE ON DELETE RESTRICT                  
+
+Mediciones sin magnitud padre (debe ser 0): 0
+Relaciones ORM: Sensor 1:N SensorMagnitud 1:N Medicion (relationship + ForeignKey).

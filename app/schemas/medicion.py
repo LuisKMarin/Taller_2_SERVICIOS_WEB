@@ -1,8 +1,33 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import (
+    AliasPath,
+    BaseModel,
+    ConfigDict,
+    Field,
+    PlainSerializer,
+    field_validator,
+)
 
+# Colombia no usa horario de verano: su hora es siempre UTC-5.
+COLOMBIA = timezone(timedelta(hours=-5), "COT")
+
+
+def _a_hora_colombia(valor: datetime) -> str:
+    """UTC -> hora de Colombia, en formato legible: 2026-10-10 21:46:12-05:00."""
+    if valor.tzinfo is None:  # la BD guarda UTC; si llega sin zona, se asume UTC
+        valor = valor.replace(tzinfo=timezone.utc)
+    return valor.astimezone(COLOMBIA).isoformat(sep=" ", timespec="seconds")
+
+
+# Fecha que se muestra siempre en hora de Colombia en las respuestas GET.
+FechaColombia = Annotated[datetime, PlainSerializer(_a_hora_colombia, return_type=str)]
+
+
+# ====================================================================
+#  Mensaje MQTT (entrada): solo valida la FORMA del payload
+# ====================================================================
 # value: número JSON (int o float). Rechaza textos ("24.6"), booleanos, NaN e infinito.
 Numero = Annotated[float, Field(strict=True, allow_inf_nan=False)]
 
@@ -40,3 +65,20 @@ class PayloadMQTT(BaseModel):
         if v.tzinfo is None or v.utcoffset() is None:
             raise ValueError("timestamp debe incluir zona horaria (UTC, ej. terminar en 'Z')")
         return v.astimezone(timezone.utc)
+
+
+# ====================================================================
+#  Respuesta de la API (salida)
+# ====================================================================
+class MedicionRead(BaseModel):
+    """Una medición tal como la devuelven los endpoints GET."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    sensor_magnitud_id: int
+    magnitud: str = Field(validation_alias=AliasPath("sensor_magnitud", "magnitud"))
+    unidad: str = Field(validation_alias=AliasPath("sensor_magnitud", "unidad"))
+    valor: float
+    timestamp_colombia: FechaColombia = Field(validation_alias="timestamp_utc")
+    fecha_recepcion_colombia: FechaColombia = Field(validation_alias="fecha_recepcion")

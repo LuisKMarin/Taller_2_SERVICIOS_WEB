@@ -1,0 +1,21 @@
+EVIDENCIA #1 - Recepcion MQTT desde el topico asignado
+Generado: 2026-10-10 22:31:30
+Archivo y funcion: app/mqtt/client.py -> _on_connect, _on_message, procesar_mensaje
+
+Total de mensajes recibidos en el log : 22
+Total guardados                       : 22
+Total rechazados                      : 0
+
+--- Primeras lineas relevantes del log ---
+2026-10-10 21:59:06,041 INFO    Conectado al broker emqx.coriotlab.co:1883
+2026-10-10 21:59:06,042 INFO    Suscrito al tópico: iot/sensors/GAS-005/data
+2026-10-10 21:59:09,153 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:07Z", "measurements": {"nh3": {"value": 2.9, "unit": "ppm"}, "temperature": {"value": 30.87, "unit": "C"}, "humidity": {"value": 46.17, "unit": "%"}}}
+2026-10-10 21:59:10,359 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:07+00:00 mediciones=3 (nh3=2.9000, temperature=30.8700, humidity=46.1700)
+2026-10-10 21:59:14,154 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:12Z", "measurements": {"nh3": {"value": 12.99, "unit": "ppm"}, "temperature": {"value": 18.21, "unit": "C"}, "humidity": {"value": 48.8, "unit": "%"}}}
+2026-10-10 21:59:14,817 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:12+00:00 mediciones=3 (nh3=12.9900, temperature=18.2100, humidity=48.8000)
+2026-10-10 21:59:19,162 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:17Z", "measurements": {"nh3": {"value": 10.85, "unit": "ppm"}, "temperature": {"value": 28.57, "unit": "C"}, "humidity": {"value": 45.87, "unit": "%"}}}
+2026-10-10 21:59:19,816 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:17+00:00 mediciones=3 (nh3=10.8500, temperature=28.5700, humidity=45.8700)
+2026-10-10 21:59:24,151 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:22Z", "measurements": {"nh3": {"value": 18.4, "unit": "ppm"}, "temperature": {"value": 27.82, "unit": "C"}, "humidity": {"value": 67.02, "unit": "%"}}}
+2026-10-10 21:59:24,799 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:22+00:00 mediciones=3 (nh3=18.4000, temperature=27.8200, humidity=67.0200)
+2026-10-10 21:59:29,152 INFO    [RECEPCION] tópico=iot/sensors/GAS-005/data payload={"sensor_id": "GAS-005", "timestamp": "2026-10-11T02:59:27Z", "measurements": {"nh3": {"value": 1.74, "unit": "ppm"}, "temperature": {"value": 31.66, "unit": "C"}, "humidity": {"value": 74.17, "unit": "%"}}}
+2026-10-10 21:59:29,805 INFO    [GUARDADO] sensor=GAS-005 timestamp_utc=2026-10-11T02:59:27+00:00 mediciones=3 (nh3=1.7400, temperature=31.6600, humidity=74.1700)
