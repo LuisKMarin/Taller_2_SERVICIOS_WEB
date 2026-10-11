@@ -3,7 +3,7 @@
 ## 1. Información General
 
 - **Proyecto:** API para recibir, validar y consultar datos de un sensor IoT (Taller 2)
-- **Integrantes:** Luis Carlos Marín Mayo / Jorge Andrés Carvajal Sepúlveda 
+- **Integrante:** Luis Carlos Marín Mayo
 - **Asignatura:** Aplicaciones y Servicios Web — Tecnología en Desarrollo de Software
 - **Fecha:** 10 de octubre de 2026
 - **Sensor asignado:** `GAS-005` (mide `nh3`, `temperature` y `humidity`)
@@ -231,7 +231,7 @@ También dejé los scripts `probar_modelos.py`, `probar_schemas.py` y `probar_cr
 
 > El historial completo con los autores se ve con: `git log --format="%h | %an | %ad | %s" --date=short`.
 
-**Aporte de cada integrante:** el trabajo lo hice yo solo (Luis Carlos Marín Mayo): la configuración inicial, los modelos, la conexión a PostgreSQL, los esquemas de Pydantic, el CRUD, el cliente MQTT, los endpoints, los scripts de prueba, las evidencias y este informe. Todos los commits del taller están a mi nombre.
+**Aporte:** el trabajo fue individual. Luis Carlos Marín Mayo realizó la configuración inicial, los modelos, la conexión a PostgreSQL, los esquemas de Pydantic, el CRUD, el cliente MQTT, los endpoints, los scripts de prueba, las evidencias y este informe. Todos los commits del taller están a su nombre.
 
 ## 9. Conclusiones
 
