@@ -3,7 +3,7 @@
 ## 1. Información General
 
 - **Proyecto:** API para recibir, validar y consultar datos de un sensor IoT (Taller 2)
-- **Integrante:** Luis Carlos Marín Mayo
+- **Integrante:** Luis Carlos Marín Mayo / Jorge Andrés Carvajal Sepúlveda
 - **Asignatura:** Aplicaciones y Servicios Web — Tecnología en Desarrollo de Software
 - **Fecha:** 10 de octubre de 2026
 - **Sensor asignado:** `GAS-005` (mide `nh3`, `temperature` y `humidity`)
@@ -229,9 +229,12 @@ También dejé los scripts `probar_modelos.py`, `probar_schemas.py` y `probar_cr
 | `00c55a6` | 2026-10-10 22:58 | feat: endpoints, schemas, scripts de prueba, evidencias y README con datos reales |
 | `a7057df` | 2026-10-10 23:24 | docs: evidencias con 20 min de muestreo, README final y .env.example completo |
 
-> El historial completo con los autores se ve con: `git log --format="%h | %an | %ad | %s" --date=short`.
+**Aporte de los integrantes**
 
-**Aporte:** el trabajo fue individual. Luis Carlos Marín Mayo realizó la configuración inicial, los modelos, la conexión a PostgreSQL, los esquemas de Pydantic, el CRUD, el cliente MQTT, los endpoints, los scripts de prueba, las evidencias y este informe. Todos los commits del taller están a su nombre.
+- **Luis Carlos Marín Mayo:** configuración inicial del proyecto, modelos ORM, conexión a PostgreSQL, esquemas de validación con Pydantic y operaciones CRUD.
+- **Jorge Andrés Carvajal Sepúlveda:** implementación del cliente MQTT, endpoints de la API, scripts de prueba, generación de evidencias y elaboración del informe.
+
+**Trabajo colaborativo:** Todos los commits se realizaron desde la cuenta de GitHub de LuisKMarin, ya que Jorge tuvo problemas con su portátil y ambos nos reunimos para trabajar en un solo equipo. Por esta razón, el historial de Git registra una única cuenta como autora de los commits, aunque el trabajo se distribuyó entre los dos integrantes.
 
 ## 9. Conclusiones
 
